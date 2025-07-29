@@ -99,7 +99,7 @@ export default function OnboardingScreen() {
 
       <TouchableOpacity style={styles.button} onPress={goToNextPage}>
         <Text style={styles.buttonText}>
-          {currentPage === onboardingPages.length - 1 ? "Continue" : "Next"}
+          {currentPage === 0 ? "Continue" : "Next"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     color: "#666",
     paddingHorizontal: 20,
   },
-  pagination: { flexDirection: "row", position: "absolute", bottom: 120 },
+  pagination: { flexDirection: "row", position: "absolute", bottom: 180 },
   dot: {
     width: 10,
     height: 10,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   activeDot: { backgroundColor: "#000" },
   button: {
     position: "absolute",
-    bottom: 50,
+    bottom: 70,
     backgroundColor: "#FFD700",
     paddingVertical: 15,
     paddingHorizontal: 40,
