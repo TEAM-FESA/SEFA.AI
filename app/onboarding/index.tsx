@@ -55,10 +55,7 @@ export default function OnboardingScreen() {
     } else {
       // Quando o carrossel é finalizado, simplesmente navega para as Tabs.
       // NENHUMA OPERAÇÃO COM ASYNCSTORAGE AQUI.
-      console.log(
-        "Onboarding LOG: Carrossel finalizado. Navegando para as Tabs."
-      );
-      router.replace("/(tabs)"); // Usa replace para que o usuário não possa voltar ao onboarding
+      router.replace("/(tabs)/Home"); // Usa replace para que o usuário não possa voltar ao onboarding
     }
   };
 

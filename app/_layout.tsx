@@ -86,7 +86,7 @@ export default function RootLayout() {
         {/* Adicione outras telas que você possa ter no futuro (ex: login/initial, login/chat) */}
         {/* <Stack.Screen name="login/initial" options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name="login/chat" options={{ headerShown: false }} /> */}
-
+        <Stack.Screen name="Home/index" />
         {/* Rota para lidar com caminhos não encontrados (404) */}
         <Stack.Screen name="+not-found" />
       </Stack>
