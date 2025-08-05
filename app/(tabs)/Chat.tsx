@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import {
   FlatList,
+  Image,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -63,7 +64,7 @@ export default function ChatScreen() {
       'Excelente! Vou criar um plano de estudos personalizado para você.',
       'Que bom que está interessado nesse assunto! Vamos explorar juntos.',
     ];
-    
+
     return responses[Math.floor(Math.random() * responses.length)];
   };
 
@@ -79,16 +80,16 @@ export default function ChatScreen() {
         {item.text}
       </Text>
       <Text style={styles.timestamp}>
-        {item.timestamp.toLocaleTimeString('pt-BR', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        {item.timestamp.toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit'
         })}
       </Text>
     </View>
   );
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
@@ -117,12 +118,19 @@ export default function ChatScreen() {
           placeholderTextColor="#999"
           multiline
         />
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
           onPress={sendMessage}
           disabled={!inputText.trim()}
         >
-          <Text style={styles.sendButtonText}>Enviar</Text>
+          <Text style={[styles.sendButtonText, {padding: 1}]}><Image source={require("@/assets/images/send.png")} /></Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
+          onPress={sendMessage}
+          disabled={!inputText.trim()}
+        >
+          <Text style={[styles.sendButtonText, {padding: 4}]}><Image source={require("@/assets/images/audio.png")} /></Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -135,10 +143,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FEC20A',
     padding: 20,
     paddingTop: 50,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    zIndex: 20,
   },
   headerTitle: {
     fontSize: 24,
@@ -159,17 +172,32 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     marginVertical: 5,
-    padding: 12,
-    borderRadius: 16,
+    paddingLeft: 28,
+    paddingRight: 28,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
     maxWidth: '80%',
   },
   userMessage: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     alignSelf: 'flex-end',
+    marginTop: 20,
+    marginBottom: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   aiMessage: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#FEC20A',
     alignSelf: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+
   },
   messageText: {
     fontSize: 16,
@@ -192,30 +220,41 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: 'rgba(0,0,0,0)',
     alignItems: 'flex-end',
+    justifyContent:'center',
+    marginBottom: 15,
   },
   textInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 20,
+    backgroundColor: '#000',
+    color: '#fff',
+    borderRadius: 50,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 20,
     fontSize: 16,
-    marginRight: 12,
     maxHeight: 100,
+    marginRight: -115,
   },
   sendButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
+    backgroundColor: '#FEC20A',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 50,
+    marginBottom: 7,
+    marginRight: 15,
+    marginLeft: -5,
+    
   },
   sendButtonDisabled: {
-    backgroundColor: '#D1D5DB',
+    backgroundColor: '#FEC20A',
   },
   sendButtonText: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
