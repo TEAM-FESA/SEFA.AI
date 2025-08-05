@@ -6,13 +6,14 @@ import {
 } from "react-native";
 
 type Porcent = {
-    sucess: Number;
+    sucess: number;
 };
 
 
 export function Schedule(props: Porcent) {
 
-    let porcent = props.sucess;
+    let barSucess = props.sucess / 100;
+    const widthCalculada = 290 * barSucess;
 
 
     return (
@@ -20,11 +21,13 @@ export function Schedule(props: Porcent) {
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Your objective!</Text>
                 <View style={styles.itensScheadule}>
-                    <Pressable style={styles.buttonSchedule} onPress={()=>console.log(porcent)}><Text>SCHEDULE   ➔</Text></Pressable>
+                    <Pressable style={styles.buttonSchedule} onPress={() => console.log(barSucess)}><Text>SCHEDULE   ➔</Text></Pressable>
                     <Text style={styles.progress}>{props.sucess ? `${props.sucess}%` : '0%'}</Text>
                 </View>
-                <View style={styles.progressSchedule}></View>
-                
+                <View style={styles.progressSchedule}>
+                    <View style={[styles.progressScheduleF, { width: widthCalculada }]}></View>
+                </View>
+
             </View>
         </View>
     );
@@ -62,12 +65,12 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 70,
         borderTopRightRadius: 70
     },
-    cardTitle:{
+    cardTitle: {
         color: 'white',
         fontWeight: 700,
         fontSize: 22,
     },
-    buttonSchedule:{
+    buttonSchedule: {
         backgroundColor: 'white',
         paddingTop: 5,
         paddingBottom: 5,
@@ -77,22 +80,28 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         borderBottomLeftRadius: 20
     },
-    progressSchedule:{
+    progressSchedule: {
         marginTop: 15,
-        backgroundColor:'#FFDF7B',
+        backgroundColor: '#FFDF7B',
         width: 290,
         height: 20,
         borderTopRightRadius: 15,
         borderBottomLeftRadius: 15,
     },
-    itensScheadule:{
-        display:'flex',
+    progressScheduleF: {
+        backgroundColor: '#C39300',
+        height: 20,
+        borderTopRightRadius: 15,
+        borderBottomLeftRadius: 15,
+    },
+    itensScheadule: {
+        display: 'flex',
         flexDirection: 'row',
         width: 280,
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    progress:{
+    progress: {
         color: 'white',
         fontSize: 26,
         fontWeight: 800,
