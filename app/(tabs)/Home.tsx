@@ -49,7 +49,7 @@ export default function Home() {
       }
       <View>
         <Text style={styles.textCardsTit}>Goals</Text>
-        <Schedule />
+        <Schedule sucess={10}/>
         <Text style={styles.textCardsTit}>In Progress</Text>
         <View style={styles.cardsList}>
           <ThemeCard materia={'Mathematics'} />

@@ -6,19 +6,25 @@ import {
 } from "react-native";
 
 type Porcent = {
-    sucess: string;
+    sucess: Number;
 };
 
-export function Schedule() {
+
+export function Schedule(props: Porcent) {
+
+    let porcent = props.sucess;
+
 
     return (
         <View style={styles.cardContainer}>
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Your objective!</Text>
-                <View>
-                    <Pressable style={styles.buttonSchedule}><Text>SCHEDULE</Text></Pressable>
+                <View style={styles.itensScheadule}>
+                    <Pressable style={styles.buttonSchedule} onPress={()=>console.log(porcent)}><Text>SCHEDULE   ➔</Text></Pressable>
+                    <Text style={styles.progress}>{props.sucess ? `${props.sucess}%` : '0%'}</Text>
                 </View>
                 <View style={styles.progressSchedule}></View>
+                
             </View>
         </View>
     );
@@ -65,9 +71,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingTop: 5,
         paddingBottom: 5,
-        paddingRight: 50,
+        paddingRight: 20,
         paddingLeft: 20,
         marginTop: 10,
+        borderTopRightRadius: 20,
+        borderBottomLeftRadius: 20
     },
     progressSchedule:{
         marginTop: 15,
@@ -76,5 +84,17 @@ const styles = StyleSheet.create({
         height: 20,
         borderTopRightRadius: 15,
         borderBottomLeftRadius: 15,
+    },
+    itensScheadule:{
+        display:'flex',
+        flexDirection: 'row',
+        width: 280,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    progress:{
+        color: 'white',
+        fontSize: 26,
+        fontWeight: 800,
     }
 });

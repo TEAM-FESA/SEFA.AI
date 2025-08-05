@@ -1,5 +1,6 @@
 // app/onboarding/index.tsx
-import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -10,27 +11,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-// REMOVA QUALQUER IMPORTAÇÃO DE AsyncStorage AQUI!
 
 const { width, height } = Dimensions.get("window");
 
 // Definição das páginas do carrossel
 const onboardingPages = [
   {
-    image: require("../../assets/images/onboarding1.png"), // <<<<<< AJUSTE O CAMINHO PARA SUA IMAGEM DA TELA 1
-    title: "Welcome to Surf.",
-    description: "I provide essential stuff for your UI designs every Tuesday!",
+    image: require("../../assets/images/onboarding1.png"),
+    title: "Bem-vindo ao SEFA.AI",
+    description: "Sua assistente de IA educacional offline para estudar onde quiser!",
   },
   {
-    image: require("../../assets/images/onboarding2.png"), // <<<<<< AJUSTE O CAMINHO PARA SUA IMAGEM DA TELA 2
-    title: "Discover Amazing Features.",
-    description:
-      "Explore a world of possibilities with our intuitive interface.",
+    image: require("../../assets/images/onboarding2.png"),
+    title: "Aprenda com IA Offline",
+    description: "Nossa IA funciona sem internet, garantindo sua privacidade e acesso sempre.",
   },
   {
-    image: require("../../assets/images/onboarding3.png"), // <<<<<< AJUSTE O CAMINHO PARA SUA IMAGEM DA TELA 3
-    title: "Get Started Now!",
-    description: "Ready to dive in? Let's begin your journey.",
+    image: require("../../assets/images/onboarding3.png"),
+    title: "Vamos Começar!",
+    description: "Pronto para transformar seus estudos? Vamos configurar sua IA educacional.",
   },
 ];
 
@@ -45,17 +44,22 @@ export default function OnboardingScreen() {
     setCurrentPage(page);
   };
 
-  const goToNextPage = () => {
-    // Não precisa ser 'async' pois não usa 'await'
+  const goToNextPage = async () => {
     if (currentPage < onboardingPages.length - 1) {
       scrollViewRef.current?.scrollTo({
         x: (currentPage + 1) * width,
         animated: true,
       });
     } else {
-      // Quando o carrossel é finalizado, simplesmente navega para as Tabs.
-      // NENHUMA OPERAÇÃO COM ASYNCSTORAGE AQUI.
-      router.replace("/(tabs)/Home"); // Usa replace para que o usuário não possa voltar ao onboarding
+      // Marcar que o onboarding foi visto
+      try {
+        await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+        console.log("Onboarding LOG: Marcado como visto. Navegando para download.");
+        router.navigate('/download');
+      } catch (error) {
+        console.error("Onboarding LOG: Erro ao salvar estado:", error);
+        router.navigate('/download');
+      }
     }
   };
 
@@ -96,7 +100,7 @@ export default function OnboardingScreen() {
 
       <TouchableOpacity style={styles.button} onPress={goToNextPage}>
         <Text style={styles.buttonText}>
-          {currentPage === 0 ? "Continue" : "Next"}
+          {currentPage === onboardingPages.length - 1 ? "Começar" : "Próximo"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -117,24 +121,32 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   image: {
-    width: "80%",
-    height: Dimensions.get("window").height * 0.4,
-    marginBottom: 40,
+    width: "70%",
+    height: Dimensions.get("window").height * 0.35,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: "center",
     color: "#333",
+    paddingHorizontal: 15,
   },
   description: {
     fontSize: 16,
     textAlign: "center",
     color: "#666",
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
+    lineHeight: 22,
+    marginBottom: 20,
   },
-  pagination: { flexDirection: "row", position: "absolute", bottom: 180 },
+  pagination: { 
+    flexDirection: "row", 
+    position: "absolute", 
+    bottom: 220,
+    alignSelf: "center",
+  },
   dot: {
     width: 10,
     height: 10,
@@ -145,7 +157,7 @@ const styles = StyleSheet.create({
   activeDot: { backgroundColor: "#000" },
   button: {
     position: "absolute",
-    bottom: 70,
+    bottom: 100,
     backgroundColor: "#FFD700",
     paddingVertical: 15,
     paddingHorizontal: 40,
@@ -155,6 +167,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    alignSelf: "center",
   },
   buttonText: { color: "#000", fontSize: 18, fontWeight: "bold" },
 });

@@ -116,5 +116,3 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
 
 });
-
-
