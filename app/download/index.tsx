@@ -32,7 +32,7 @@ export default function DownloadScreen() {
           clearInterval(progressInterval);
           // Quando completo, vai para o chat
           setTimeout(() => {
-            router.replace('/(tabs)/Home');
+            router.replace('/chat');
           }, 1000);
           return 100;
         }
