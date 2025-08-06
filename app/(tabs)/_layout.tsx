@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Image, Platform, Pressable, StyleSheet, Text } from "react-native";
+import { Image, Platform, Pressable, StyleSheet } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { HistoryIcon, HomeIcon, ProfileIcon, TasksIcon } from "@/components/ui/CustomIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
@@ -14,13 +14,18 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: 'white',
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: Platform.select({
           default: {
             backgroundColor: '#000',
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+            height: 90,
+            paddingBottom: 15,
+            paddingTop: 15,
+            paddingHorizontal: 10,
           },
         }),
       }}
@@ -30,16 +35,16 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <HomeIcon size={22} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="index"
         options={{
-          title: "Schedule",
+          title: "Tasks",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <TasksIcon size={22} color={color} />
           ),
         }}
       />
@@ -47,46 +52,33 @@ export default function TabLayout() {
         name="Chat"
         options={{
           title: "Chat",
-          tabBarLabel: ({ focused, color }) => (
-            <Text style={{
-              color: focused ? '#000' : '#826200', // Cores para ativo/inativo
-              fontSize: 12,
-              marginBottom: 4, // Ajuste conforme necessário
-            }}>
-              Chat
-            </Text>
-          ),
-          tabBarIcon: ({ color, focused }) => (
+          tabBarLabel: () => null,
+          tabBarIcon: ({ focused }) => (
             <Image
               source={require('../../assets/images/toucan.png')}
               style={{
-                margin: 2,
-                width: 28,
-                height: 28,
-                // Remova o padding se quiser controle mais preciso
-                tintColor: focused ? '#000' : '#826200' // Cores personalizadas para estado ativo/inativo
+                width: 30,
+                height: 30,
+                tintColor: '#000',
               }}
             />
           ),
-          // Opção 1: Botão personalizado mantendo a funcionalidade padrão
           tabBarButton: (props) => (
             <Pressable
               {...props}
-              style={
-                {flex: 1,
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: -10,
+                transform: [{ translateX: -30 }],
                 justifyContent: 'center',
                 alignItems: 'center',
-                // Adicione um background se necessário
                 backgroundColor: '#FEC20A',
-                borderRadius: 200,
-                marginBottom: -10,
-                marginTop: -25,
-                borderWidth: 4,
-                transform: [
-                  { translateY: 0 } // Move 10 pixels para baixo
-                ],
-                borderColor:'black',}
-            }
+                borderRadius: 30,
+                width: 60,
+                height: 60,
+                zIndex: 1000,
+              }}
             />
           ),
         }}
@@ -94,18 +86,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          title: "History",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <HistoryIcon size={22} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="Perfil"
         options={{
-          title: "Perfil",
+          title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <ProfileIcon size={22} color={color} />
           ),
         }}
       />

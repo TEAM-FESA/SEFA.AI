@@ -1,4 +1,5 @@
-// app/(tabs)/index.tsx - CHAT PRINCIPAL SEFA.AI
+// app/(tabs)/Chat.tsx - CHAT SEFA.AI
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   FlatList,
@@ -23,8 +24,26 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Olá! Eu sou o SEFA.AI, seu assistente educacional. Como posso ajudar você hoje?',
+      text: 'Hello! What is your name?',
       isUser: false,
+      timestamp: new Date(),
+    },
+    {
+      id: '2',
+      text: 'Lula',
+      isUser: true,
+      timestamp: new Date(),
+    },
+    {
+      id: '3',
+      text: 'How old are you?',
+      isUser: false,
+      timestamp: new Date(),
+    },
+    {
+      id: '4',
+      text: '15',
+      isUser: true,
       timestamp: new Date(),
     }
   ]);
@@ -33,7 +52,6 @@ export default function ChatScreen() {
   const sendMessage = () => {
     if (!inputText.trim()) return;
 
-    // Adiciona mensagem do usuário
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
@@ -58,11 +76,11 @@ export default function ChatScreen() {
 
   const generateAIResponse = (userInput: string): string => {
     const responses = [
-      'Ótima pergunta! Vou explicar isso de forma simples para você.',
-      'Entendi sua dúvida. Vamos resolver isso passo a passo.',
-      'Essa é uma área muito interessante de estudo. Posso te ajudar com mais detalhes.',
-      'Excelente! Vou criar um plano de estudos personalizado para você.',
-      'Que bom que está interessado nesse assunto! Vamos explorar juntos.',
+      'That\'s interesting! Tell me more about that.',
+      'I understand. How can I help you with that?',
+      'Great! Let\'s explore this topic together.',
+      'I see. What would you like to learn about?',
+      'Perfect! I can help you with that.',
     ];
 
     return responses[Math.floor(Math.random() * responses.length)];
@@ -73,18 +91,32 @@ export default function ChatScreen() {
       styles.messageContainer,
       item.isUser ? styles.userMessage : styles.aiMessage
     ]}>
-      <Text style={[
-        styles.messageText,
-        item.isUser ? styles.userMessageText : styles.aiMessageText
+      {!item.isUser && (
+        <View style={styles.aiAvatar}>
+          <Image 
+            source={require('../../assets/images/toucan.png')}
+            style={styles.avatarImage}
+          />
+        </View>
+      )}
+      <View style={[
+        styles.messageBubble,
+        item.isUser ? styles.userBubble : styles.aiBubble
       ]}>
-        {item.text}
-      </Text>
-      <Text style={styles.timestamp}>
-        {item.timestamp.toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit'
-        })}
-      </Text>
+        <Text style={[
+          styles.messageText,
+          item.isUser ? styles.userMessageText : styles.aiMessageText
+        ]}>
+          {item.text}
+        </Text>
+      </View>
+      {item.isUser && (
+        <View style={styles.userAvatar}>
+          <View style={styles.userAvatarCircle}>
+            <Text style={styles.userAvatarText}>U</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 
@@ -95,9 +127,25 @@ export default function ChatScreen() {
     >
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>SEFA.AI</Text>
-        <Text style={styles.headerSubtitle}>Seu Assistente Educacional</Text>
+        <View style={styles.headerCenter}>
+          <TouchableOpacity 
+            style={styles.chatButtonContainer}
+            onPress={() => {
+              console.log('Botão Chat pressionado');
+              router.push('/(tabs)/Home');
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.chatButtonShadow} />
+            <View style={styles.chatButton}>
+              <Text style={styles.chatButtonText}>Chat</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {/* Divider */}
+      <View style={styles.divider} />
 
       {/* Messages */}
       <FlatList
@@ -106,9 +154,10 @@ export default function ChatScreen() {
         keyExtractor={item => item.id}
         style={styles.messagesList}
         contentContainerStyle={styles.messagesContainer}
+        showsVerticalScrollIndicator={false}
       />
 
-      {/* Input */}
+      {/* Input - Mantendo o original */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.textInput}
@@ -123,14 +172,10 @@ export default function ChatScreen() {
           onPress={sendMessage}
           disabled={!inputText.trim()}
         >
-          <Text style={[styles.sendButtonText, {padding: 1}]}><Image source={require("@/assets/images/send.png")} /></Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
-          onPress={sendMessage}
-          disabled={!inputText.trim()}
-        >
-          <Text style={[styles.sendButtonText, {padding: 4}]}><Image source={require("@/assets/images/audio.png")} /></Text>
+          <Image 
+            source={require("@/assets/images/send.png")} 
+            style={styles.sendIcon}
+          />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -143,25 +188,50 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#FEC20A',
-    padding: 20,
-    paddingTop: 50,
+    flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    zIndex: 20,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 15,
+    backgroundColor: '#fff',
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+  headerCenter: {
+    alignItems: 'center',
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#E3F2FD',
-    marginTop: 4,
+
+  chatButtonContainer: {
+    position: 'relative',
+    zIndex: 10,
+  },
+  chatButtonShadow: {
+    position: 'absolute',
+    top: 2,
+    left: 2,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#FEC20A',
+    borderRadius: 8,
+    zIndex: 1,
+  },
+  chatButton: {
+    backgroundColor: '#FEC20A',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+    zIndex: 3,
+    position: 'relative',
+  },
+  chatButtonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: '#000',
+    marginHorizontal: 20,
   },
   messagesList: {
     flex: 1,
@@ -171,33 +241,29 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   messageContainer: {
-    marginVertical: 5,
-    paddingLeft: 28,
-    paddingRight: 28,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderTopRightRadius: 50,
-    borderBottomLeftRadius: 50,
-    maxWidth: '80%',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginVertical: 8,
   },
-  userMessage: {
-    backgroundColor: '#000',
-    alignSelf: 'flex-end',
-    marginTop: 20,
-    marginBottom: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+  messageBubble: {
+    maxWidth: '75%',
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 25,
   },
   aiMessage: {
+    justifyContent: 'flex-start',
+  },
+  userMessage: {
+    justifyContent: 'flex-end',
+  },
+  aiBubble: {
     backgroundColor: '#FEC20A',
-    alignSelf: 'flex-start',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-
+    marginLeft: 8,
+  },
+  userBubble: {
+    backgroundColor: '#000',
+    marginRight: 8,
   },
   messageText: {
     fontSize: 16,
@@ -207,13 +273,42 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   aiMessageText: {
-    color: '#1F2937',
+    color: '#000',
   },
-  timestamp: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 4,
-    textAlign: 'right',
+  aiAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FEC20A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  avatarImage: {
+    width: 22,
+    height: 22,
+    tintColor: '#000',
+  },
+  userAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  userAvatarCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#8B5CF6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  userAvatarText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -224,39 +319,37 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent:'center',
     marginBottom: 15,
+    position: 'relative',
   },
   textInput: {
     flex: 1,
     borderWidth: 1,
     backgroundColor: '#000',
     color: '#fff',
-    borderRadius: 50,
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingRight: 50,
     fontSize: 16,
-    maxHeight: 100,
-    marginRight: -115,
+    maxHeight: 60,
   },
   sendButton: {
     backgroundColor: '#FEC20A',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 50,
-    marginBottom: 7,
-    marginRight: 15,
-    marginLeft: -5,
-    
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    position: 'absolute',
+    right: 25,
+    top: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sendButtonDisabled: {
     backgroundColor: '#FEC20A',
   },
-  sendButtonText: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
+  sendIcon: {
+    width: 18,
+    height: 18,
+    tintColor: '#fff',
   },
 });
