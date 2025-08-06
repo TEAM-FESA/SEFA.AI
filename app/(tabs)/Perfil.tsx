@@ -1,16 +1,33 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Pressable
-} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+    Pressable,
+    StyleSheet,
+    Text,
+    View
+} from "react-native";
 
 export default function Perfil() {
 
   const [notifications, setNotifications] = useState(false);
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    async function loadUserName() {
+      try {
+        const userProfile = await AsyncStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          setUserName(profile.name || 'User');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar nome do usuário:', error);
+      }
+    }
+    
+    loadUserName();
+  }, []);
 
   const openNotifications = () => {
     if (notifications) {
@@ -29,7 +46,7 @@ export default function Perfil() {
           <Image source={require("@/assets/images/user.png")} style={styles.userIcon} />
         </View>
         <View style={styles.userText}>
-          <Text style={styles.nameUser}>Hello <Text style={styles.name}>Franklin</Text></Text>
+          <Text style={styles.nameUser}>Hello <Text style={styles.name}>{userName}</Text></Text>
           <Text style={styles.nameUser}>Welcome!</Text>
         </View>
         <Pressable
@@ -56,7 +73,7 @@ export default function Perfil() {
           />
           <View style={styles.notificationModal}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Notificações</Text>
+              <Text style={styles.modalTitle}>Notifications</Text>
               <Pressable onPress={() => openNotifications()}>
                 <Text style={styles.closeButton}>✕</Text>
               </Pressable>
@@ -67,9 +84,9 @@ export default function Perfil() {
                   <Text style={styles.iconText}>📚</Text>
                 </View>
                 <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>Nova lição disponível</Text>
-                  <Text style={styles.notificationSubtitle}>Matemática - Capítulo 3</Text>
-                  <Text style={styles.notificationTime}>Há 2 horas</Text>
+                  <Text style={styles.notificationTitle}>New lesson available</Text>
+                  <Text style={styles.notificationSubtitle}>Mathematics - Chapter 3</Text>
+                  <Text style={styles.notificationTime}>2 hours ago</Text>
                 </View>
               </View>
               <View style={styles.notificationItem}>
@@ -77,9 +94,9 @@ export default function Perfil() {
                   <Text style={styles.iconText}>🎯</Text>
                 </View>
                 <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>Meta alcançada!</Text>
-                  <Text style={styles.notificationSubtitle}>Você completou 5 exercícios</Text>
-                  <Text style={styles.notificationTime}>Há 1 dia</Text>
+                  <Text style={styles.notificationTitle}>Goal achieved!</Text>
+                  <Text style={styles.notificationSubtitle}>You completed 5 exercises</Text>
+                  <Text style={styles.notificationTime}>1 day ago</Text>
                 </View>
               </View>
             </View>
@@ -93,7 +110,7 @@ export default function Perfil() {
               width: 65,
               height: 65,
             }]}></Image>
-            <Text style={styles.textCard}>Dados</Text>
+            <Text style={styles.textCard}>Data</Text>
           </Pressable>
         </View>
         <View style={styles.cardsBack}>
@@ -102,7 +119,7 @@ export default function Perfil() {
               width: 65,
               height: 65,
             }]}></Image>
-            <Text style={styles.textCard}>Config</Text>
+            <Text style={styles.textCard}>Settings</Text>
           </Pressable>
         </View>
         <View style={styles.cardsBack}>
@@ -111,7 +128,7 @@ export default function Perfil() {
               width: 65,
               height: 65,
             }]}></Image>
-            <Text style={styles.textCard}>App infos</Text>
+            <Text style={styles.textCard}>App info</Text>
           </Pressable>
         </View>
       </View>

@@ -1,10 +1,30 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, View, Text, Pressable, Dimensions } from 'react-native';
-import { LineChart, BarChart } from 'react-native-chart-kit';
+import { useEffect, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { BarChart, LineChart } from 'react-native-chart-kit';
 
 
 export default function TabTwoScreen() {
   const screenWidth = Dimensions.get("window").width;
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    async function loadUserName() {
+      try {
+        const userProfile = await AsyncStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          setUserName(profile.name || 'User');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar nome do usuário:', error);
+      }
+    }
+    
+    loadUserName();
+  }, []);
+
   const lineData = {
     labels: ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
     datasets: [
@@ -33,7 +53,7 @@ export default function TabTwoScreen() {
           <Image source={require("@/assets/images/user.png")} style={styles.userIcon} />
         </View>
         <View style={styles.userText}>
-          <Text style={styles.nameUser}>Hello <Text style={styles.name}>Franklin</Text></Text>
+          <Text style={styles.nameUser}>Hello <Text style={styles.name}>{userName}</Text></Text>
           <Text style={styles.nameUser}>Welcome!</Text>
         </View>
         <Pressable

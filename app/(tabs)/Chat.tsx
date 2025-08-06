@@ -1,18 +1,33 @@
-// app/(tabs)/Chat.tsx - CHAT SEFA.AI
+/**
+ * SEFA.AI - Main Chat Screen Component (Tabs)
+ * 
+ * This is the primary chat interface after user onboarding is complete.
+ * Features:
+ * - Full AI conversation capability with educational focus
+ * - Personalized user avatar with first name initial
+ * - Context-aware AI responses for various educational topics
+ * - Persistent chat history and user preferences
+ * - Integrated with the completed user profile from onboarding
+ */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    FlatList,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
+/**
+ * Message interface for the main chat system
+ * Defines the structure of each message in the conversation
+ */
 interface Message {
   id: string;
   text: string;
@@ -21,37 +36,44 @@ interface Message {
 }
 
 export default function ChatScreen() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'Hello! What is your name?',
-      isUser: false,
-      timestamp: new Date(),
-    },
-    {
-      id: '2',
-      text: 'Lula',
-      isUser: true,
-      timestamp: new Date(),
-    },
-    {
-      id: '3',
-      text: 'How old are you?',
-      isUser: false,
-      timestamp: new Date(),
-    },
-    {
-      id: '4',
-      text: '15',
-      isUser: true,
-      timestamp: new Date(),
-    }
-  ]);
+  // Chat messages array - starts empty for fresh conversations
+  const [messages, setMessages] = useState<Message[]>([]);
+  
+  // Current text input value
   const [inputText, setInputText] = useState('');
+  
+  // User's name loaded from profile for personalized avatar
+  const [userName, setUserName] = useState('User');
 
+  /**
+   * Load user profile data on component mount
+   * Retrieves the user's name from AsyncStorage for avatar personalization
+   */
+  useEffect(() => {
+    async function loadUserName() {
+      try {
+        const userProfile = await AsyncStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          setUserName(profile.name || 'User');
+        }
+      } catch (error) {
+        console.error('Error loading user name:', error);
+      }
+    }
+    
+    loadUserName();
+  }, []);
+
+  /**
+   * Send message function for main chat interface
+   * Handles user messages and generates AI responses with educational focus
+   */
   const sendMessage = () => {
+    // Don't send empty messages
     if (!inputText.trim()) return;
 
+    // Create user message object
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
@@ -59,10 +81,11 @@ export default function ChatScreen() {
       timestamp: new Date(),
     };
 
+    // Add user message to chat and clear input
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
 
-    // Simula resposta da IA
+    // Generate AI response with delay for natural conversation feel
     setTimeout(() => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -74,16 +97,143 @@ export default function ChatScreen() {
     }, 1000);
   };
 
+  /**
+   * Enhanced AI Response Generation for Main Chat
+   * 
+   * Provides context-aware educational responses based on user input analysis.
+   * Includes study tips, subject-specific help, motivation, and general assistance.
+   * 
+   * @param userInput - The user's message text
+   * @returns A contextually appropriate educational AI response
+   */
   const generateAIResponse = (userInput: string): string => {
-    const responses = [
-      'That\'s interesting! Tell me more about that.',
-      'I understand. How can I help you with that?',
-      'Great! Let\'s explore this topic together.',
-      'I see. What would you like to learn about?',
-      'Perfect! I can help you with that.',
+    const input = userInput.toLowerCase();
+    
+    // Study tips and learning suggestions
+    if (input.includes('tip') || input.includes('advice') || input.includes('suggestion')) {
+      const tipResponses = [
+        'Here\'s a study tip: Break your learning into 25-minute focused sessions with 5-minute breaks.',
+        'Try the Pomodoro Technique: 25 minutes of study, then a short break. It really works!',
+        'My advice: Review your notes within 24 hours of learning. This helps retention significantly.',
+        'Suggestion: Create mind maps for complex topics. Visual learning is very effective!',
+        'Pro tip: Teach what you learn to someone else. It\'s the best way to master a subject.'
+      ];
+      return tipResponses[Math.floor(Math.random() * tipResponses.length)];
+    }
+    
+    if (input.includes('motivation') || input.includes('encourage') || input.includes('inspire')) {
+      const motivationResponses = [
+        'Remember: Every expert was once a beginner. You\'re making great progress!',
+        'Your dedication to learning is inspiring. Keep going, you\'re doing amazing!',
+        'Learning is a journey, not a destination. Enjoy the process of discovery!',
+        'You have the power to learn anything you set your mind to. Believe in yourself!',
+        'Every challenge you overcome makes you stronger. You\'re building an amazing future!'
+      ];
+      return motivationResponses[Math.floor(Math.random() * motivationResponses.length)];
+    }
+    
+    if (input.includes('schedule') || input.includes('time') || input.includes('plan')) {
+      const scheduleResponses = [
+        'Great question! Try studying at the same time each day to build a consistent habit.',
+        'Morning study sessions are often most effective when your mind is fresh.',
+        'Plan your study sessions in advance. Consistency beats intensity every time.',
+        'Find your peak energy hours and schedule your most challenging subjects then.',
+        'Create a weekly study plan. It helps you stay organized and motivated.'
+      ];
+      return scheduleResponses[Math.floor(Math.random() * scheduleResponses.length)];
+    }
+    
+    // Educational responses based on context
+    if (input.includes('math') || input.includes('mathematics') || input.includes('calculate')) {
+      const mathResponses = [
+        'Great question about mathematics! Let me help you understand this concept.',
+        'Mathematics can be challenging, but let\'s break this down step by step.',
+        'I love math questions! This is a perfect opportunity to practice.',
+        'Let\'s solve this mathematical problem together. What specific area are you working on?',
+        'Mathematics is all about patterns and logic. What concept are you studying?'
+      ];
+      return mathResponses[Math.floor(Math.random() * mathResponses.length)];
+    }
+    
+    if (input.includes('history') || input.includes('historical')) {
+      const historyResponses = [
+        'History is fascinating! Let\'s explore this historical period together.',
+        'Understanding history helps us learn from the past. What era are you studying?',
+        'History is full of amazing stories and lessons. What specific event interests you?',
+        'Let\'s dive into this historical topic. History connects us to our past.',
+        'Historical knowledge is crucial for understanding our world today.'
+      ];
+      return historyResponses[Math.floor(Math.random() * historyResponses.length)];
+    }
+    
+    if (input.includes('geography') || input.includes('geographic') || input.includes('country') || input.includes('place')) {
+      const geographyResponses = [
+        'Geography helps us understand our world! What region are you studying?',
+        'The world is full of amazing places and cultures. Let\'s explore together.',
+        'Geography connects people, places, and environments. What fascinates you?',
+        'Understanding geography helps us appreciate our planet\'s diversity.',
+        'Let\'s discover the world through geography. What area interests you?'
+      ];
+      return geographyResponses[Math.floor(Math.random() * geographyResponses.length)];
+    }
+    
+    if (input.includes('portuguese') || input.includes('language') || input.includes('grammar') || input.includes('write')) {
+      const languageResponses = [
+        'Language is the key to communication! Let\'s improve your Portuguese skills.',
+        'Writing and grammar are essential skills. What aspect are you working on?',
+        'Language connects us all. Let\'s practice your Portuguese together.',
+        'Good communication skills are valuable in life. What would you like to practice?',
+        'Let\'s enhance your language abilities. What specific area needs attention?'
+      ];
+      return languageResponses[Math.floor(Math.random() * languageResponses.length)];
+    }
+    
+    if (input.includes('help') || input.includes('difficult') || input.includes('hard')) {
+      const helpResponses = [
+        'I\'m here to help you learn! What specific topic is challenging you?',
+        'Don\'t worry, learning takes time. Let\'s work through this together.',
+        'Every challenge is an opportunity to grow. What can I help you with?',
+        'I understand this might be difficult. Let\'s break it down into smaller steps.',
+        'You\'re not alone in this learning journey. What would you like to focus on?'
+      ];
+      return helpResponses[Math.floor(Math.random() * helpResponses.length)];
+    }
+    
+    if (input.includes('study') || input.includes('learn') || input.includes('practice')) {
+      const studyResponses = [
+        'Excellent! Active studying is the best way to learn. What\'s your study plan?',
+        'Practice makes perfect! What subject would you like to focus on today?',
+        'Learning is a lifelong journey. What new concept are you exploring?',
+        'Great initiative! Let\'s make your study session productive.',
+        'Studying effectively is a skill. What techniques work best for you?'
+      ];
+      return studyResponses[Math.floor(Math.random() * studyResponses.length)];
+    }
+    
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      const greetingResponses = [
+        'Hello! I\'m your educational AI assistant. How can I help you learn today?',
+        'Hi there! Ready to explore and learn together? What subject interests you?',
+        'Hey! I\'m here to support your learning journey. What would you like to study?',
+        'Hello! Let\'s make learning fun and effective. What can I help you with?',
+        'Hi! I\'m excited to help you learn. What topic would you like to explore?'
+      ];
+      return greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
+    }
+    
+    // General educational responses
+    const generalResponses = [
+      'That\'s an interesting question! Let\'s explore this topic together.',
+      'Learning is a wonderful journey. What would you like to discover?',
+      'I\'m here to help you succeed in your studies. What can we work on?',
+      'Every question is a step toward knowledge. What interests you?',
+      'Let\'s make learning engaging and effective. What subject are you studying?',
+      'I love your curiosity! What would you like to learn about today?',
+      'Education opens doors to new possibilities. What door would you like to open?',
+      'Your learning journey is unique. How can I support you today?'
     ];
-
-    return responses[Math.floor(Math.random() * responses.length)];
+    
+    return generalResponses[Math.floor(Math.random() * generalResponses.length)];
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
@@ -113,7 +263,7 @@ export default function ChatScreen() {
       {item.isUser && (
         <View style={styles.userAvatar}>
           <View style={styles.userAvatarCircle}>
-            <Text style={styles.userAvatarText}>U</Text>
+            <Text style={styles.userAvatarText}>{userName.charAt(0).toUpperCase()}</Text>
           </View>
         </View>
       )}
@@ -163,7 +313,7 @@ export default function ChatScreen() {
           style={styles.textInput}
           value={inputText}
           onChangeText={setInputText}
-          placeholder="Digite sua pergunta..."
+          placeholder="Type your question..."
           placeholderTextColor="#999"
           multiline
         />

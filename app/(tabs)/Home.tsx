@@ -1,5 +1,19 @@
+/**
+ * SEFA.AI - Home Dashboard Component
+ * 
+ * Main dashboard screen showing personalized learning content and user progress.
+ * Features:
+ * - Personalized greeting with user's name from profile
+ * - Notification system for educational updates
+ * - Study schedule cards and recommendations
+ * - Subject theme cards for quick navigation
+ * - Progress tracking and learning analytics
+ * - Integration with user profile and preferences
+ */
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Pressable,
     StyleSheet,
@@ -12,8 +26,36 @@ import { ThemeCard } from "@/components/ThemeCard";
 
 
 export default function Home() {
+  // State for notification panel visibility
   const [notifications, setNotifications] = useState(false);
+  
+  // User's name loaded from profile for personalized greeting
+  const [userName, setUserName] = useState('User');
 
+  /**
+   * Load user profile data on component mount
+   * Retrieves the user's name for personalized dashboard experience
+   */
+  useEffect(() => {
+    async function loadUserName() {
+      try {
+        const userProfile = await AsyncStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          setUserName(profile.name || 'User');
+        }
+      } catch (error) {
+        console.error('Error loading user name:', error);
+      }
+    }
+    
+    loadUserName();
+  }, []);
+
+  /**
+   * Toggle notification panel visibility
+   * Controls the display of educational notifications and updates
+   */
   const openNotifications = () => {
     if (notifications) {
       setNotifications(false)
@@ -25,14 +67,20 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
+      {/* Header section with user profile and notifications */}
       <View style={styles.perfilInfos}>
+        {/* User profile picture */}
         <View style={styles.outerBorder}>
           <Image source={require("@/assets/images/user.png")} style={styles.userIcon} />
         </View>
+        
+        {/* Personalized greeting with user's name */}
         <View style={styles.userText}>
-          <Text style={styles.nameUser}>Hello <Text style={styles.name}>Franklin</Text></Text>
+          <Text style={styles.nameUser}>Hello <Text style={styles.name}>{userName}</Text></Text>
           <Text style={styles.nameUser}>Welcome!</Text>
         </View>
+        
+        {/* Notification bell with badge */}
         <Pressable 
           onPress={() => openNotifications()}
           style={styles.notificationButton}
@@ -48,6 +96,7 @@ export default function Home() {
           </View>
         </Pressable>
       </View>
+      {/* Notification panel modal overlay */}
       {notifications ? (
         <View style={styles.notificationsContainer}>
           <Pressable 
@@ -57,20 +106,21 @@ export default function Home() {
           />
           <View style={styles.notificationModal}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Notificações</Text>
+              <Text style={styles.modalTitle}>Notifications</Text>
               <Pressable onPress={() => openNotifications()}>
                 <Text style={styles.closeButton}>✕</Text>
               </Pressable>
             </View>
             <View style={styles.notificationList}>
+              {/* Educational notification examples */}
               <View style={styles.notificationItem}>
                 <View style={styles.notificationIcon}>
                   <Text style={styles.iconText}>📚</Text>
                 </View>
                 <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>Nova lição disponível</Text>
-                  <Text style={styles.notificationSubtitle}>Matemática - Capítulo 3</Text>
-                  <Text style={styles.notificationTime}>Há 2 horas</Text>
+                  <Text style={styles.notificationTitle}>New lesson available</Text>
+                  <Text style={styles.notificationSubtitle}>Mathematics - Chapter 3</Text>
+                  <Text style={styles.notificationTime}>2 hours ago</Text>
                 </View>
               </View>
               <View style={styles.notificationItem}>
@@ -78,20 +128,25 @@ export default function Home() {
                   <Text style={styles.iconText}>🎯</Text>
                 </View>
                 <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>Meta alcançada!</Text>
-                  <Text style={styles.notificationSubtitle}>Você completou 5 exercícios</Text>
-                  <Text style={styles.notificationTime}>Há 1 dia</Text>
+                  <Text style={styles.notificationTitle}>Goal achieved!</Text>
+                  <Text style={styles.notificationSubtitle}>You completed 5 exercises</Text>
+                  <Text style={styles.notificationTime}>1 day ago</Text>
                 </View>
               </View>
             </View>
           </View>
         </View>
       ) : null}
+      {/* Main dashboard content */}
       <View>
+        {/* Learning goals section */}
         <Text style={styles.textCardsTit}>Goals</Text>
         <Schedule sucess={70}/>
+        
+        {/* Current progress section */}
         <Text style={styles.textCardsTit}>In Progress</Text>
         <View style={styles.cardsList}>
+          {/* Subject theme cards for quick navigation */}
           <ThemeCard materia={'Mathematics'} />
           <ThemeCard materia={'Mathematics'} />
           <ThemeCard materia={'Mathematics'} />
@@ -102,6 +157,10 @@ export default function Home() {
   );
 }
 
+/**
+ * Stylesheet for Home Dashboard
+ * Modern, clean design with consistent spacing and responsive layout
+ */
 const styles = StyleSheet.create({
   container: {
     display: 'flex',

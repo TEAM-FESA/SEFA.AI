@@ -30,8 +30,8 @@ export default function ChatScreen() {
   ];
 
   const renderItem = ({ item }) => (
-    <View style={item['id']==1?styles.firstCard:styles.card}>
-      <Text style={item['id']==1?styles.firstCardTitle:styles.cardTitle}>{item.title}</Text>
+    <View style={item['id']===1?styles.firstCard:styles.card}>
+      <Text style={item['id']===1?styles.firstCardTitle:styles.cardTitle}>{item.title}</Text>
     </View>
   );
 
