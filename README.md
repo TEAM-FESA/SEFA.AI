@@ -535,7 +535,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 - **Project Repository**: [GitHub](https://github.com/yourusername/SEFA.AI)
-- **Documentation**: [Wiki](https://github.com/yourusername/SEFA.AI/wiki)
 - **Issues**: [GitHub Issues](https://github.com/yourusername/SEFA.AI/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/SEFA.AI/discussions)
 
