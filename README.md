@@ -2,9 +2,10 @@
 
 <div align="center">
 
-![SEFA.AI Logo](assets/images/logoSefa.png)
+<img width="658" height="404" alt="image" src="https://github.com/user-attachments/assets/ff2a641c-8a6f-4453-b7c9-4c46a6f6aa61" />
 
-**Revolutionizing Education with Offline AI Technology**
+
+**Empowering Education with AI, Even Without Internet**
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.79.5-blue.svg)](https://reactnative.dev/)
 [![Expo](https://img.shields.io/badge/Expo-53.0.20-black.svg)](https://expo.dev/)
@@ -534,9 +535,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **Project Repository**: [GitHub](https://github.com/yourusername/SEFA.AI)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/SEFA.AI/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/SEFA.AI/discussions)
+- **Project Repository**: [GitHub](https://github.com/TEAM-FESA/SEFA.AI)
+- **Issues**: [GitHub Issues](https://github.com/TEAM-FESA/SEFA.AI/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/TEAM-FESA/SEFA.AI/discussions)
 
 ---
 
