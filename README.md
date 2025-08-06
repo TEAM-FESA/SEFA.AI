@@ -1,4 +1,4 @@
-# 🚀 SEFA.AI - Offline Educational AI Assistant
+# 🚀 SEFA.AI - Educational AI Assistant for Personalized Learning
 
 <div align="center">
 
