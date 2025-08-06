@@ -128,9 +128,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 350,
     marginTop: 10,
-    borderRightColor: '#999',
+    borderRightColor: '#333',
     borderRightWidth: 1,
-    borderLeftColor: '#999',
+    borderLeftColor: '#333',
     borderLeftWidth: 1,
   },
   card: {
@@ -149,6 +149,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',
     gap: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   containerCarrosel:{
     marginTop: 30,
@@ -179,6 +186,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',
     gap: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
 
   schedulesContainer:{
@@ -203,6 +217,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   addTaskIcon:{
     fontSize: 32,
@@ -219,6 +240,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 25,
     marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   }
 
 });
